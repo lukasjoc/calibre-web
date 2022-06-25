@@ -79,6 +79,16 @@
                   <button type="button" id="sepiaTheme" class="sepiaTheme" onclick="selectTheme(this.id)"><span id="sepiaSelected"> </span>{{_('Sepia')}}</button>
                   <button type="button" id="blackTheme" class="blackTheme" onclick="selectTheme(this.id)"><span id="blackSelected"> </span>{{_('Black')}}</button>
               </div>
+              <div class="font-settings" id="font-settings">
+                <p>Font settings</p>
+                <input type="text" class="font-settings-family"
+                  oninput="changeFontFamily()" value="serif">
+                <select oninput="changeFontSize()" class="font-settings-size">
+                  {% for i in range(9, 73)%}
+                    <option value={{ i }}>{{ i }}</option>
+                  {%endfor%}
+                </select>
+            </div>
               <div>
                   <p>
                     <input type="checkbox" id="sidebarReflow" name="sidebarReflow">{{_('Reflow text when sidebars are open.')}}
@@ -129,6 +139,27 @@
               document.getElementById("main").style.backgroundColor = "black";
             }
           }
+
+          function changeFontFamily() {
+            const input = document.querySelector("input.font-settings-family");
+            if(!reader || !input.value) {
+              console.warn("Font Settings: Could not set font-family");
+              return;
+            }
+            reader.rendition.themes.font(input.value);
+          }
+
+          function changeFontSize() {
+            const input = document.querySelector("select.font-settings-size");
+            if(!reader || !input.value) {
+              console.warn("Font Settings: Could not set font-size");
+              return;
+            }
+            reader.rendition.themes.fontSize(`${input.value}px`);
+          }
+
+          const input = document.querySelector(".font-settings-size");
+          input.value = parseInt(window.getComputedStyle(document.body).fontSize);
       </script>
       <script src="{{ url_for('static', filename='js/libs/screenfull.min.js') }}"></script>
       <script src="{{ url_for('static', filename='js/libs/reader.min.js') }}"></script>
